@@ -1,4 +1,4 @@
-# 押题
+# 知识点总结
 ---
 ## week 1 how web works
 - protocol is a set of rules that partners in communication use when they communicate.
@@ -524,6 +524,7 @@ var person = {
 	- express-session: ```app.use(session({secret:'ssshhhhh', cookie:{maxAge: 5*60*10000}, resave: true, saveUninitialized: true}));```; ```req.session```
 - DB layer (MongoDB)
 	- Key-Value Storage
+	![DB comparation](./img2/DBCompare.png)
 	- example:
 		```
 		Invoice _1= {    customer: {name: “John”, address: “Sydney”},
@@ -534,13 +535,14 @@ var person = {
 		- Predefined special types: Date, object id, binary data, regular expression, timestamp...
 - MongoDB 参考 [MongoDB](./mongodb.md)
 ---
-## week 8
+## week 8 mongoose
 - MongoDB indexing
 	- _id index: automatically indexed for all collections; unique, incremental
 	- other fields: ```db.<collectionName>.createIndex({<fieldName>:1});```
 		- 1: ascending; -1: descending
 	- compound index:
 		- a SINGLE index structure with references to multiple fields
+			- ```db.users.find({score:{"$lt": 30}}).sort({sort: -1})```
 		- field order matters: indexes are sorted by the value of the first field, then second, third...
 - Multi-tier application architecture
 	- Maintain persistent data of the application
@@ -573,24 +575,25 @@ var person = {
 			- collection:
 			```
 			{
-			"_id" : 1.0,
-			"Title" : "Sense and Sensibility",
-			"Year" : 1995.0,
-			"Genres" : [ "Comedy", "Drama",
-			“Romance”]
+				"_id" : 1.0,
+				"Title" : "Sense and Sensibility",
+				"Year" : 1995.0,
+				"Genres" : [ "Comedy", "Drama", "Romance"]
 			}
 			```
-			- Schema:
+			- Schema: 
 			```
-			var movieSchema = new Schema({
-			Title: String,
-			Year: Number,
-			Genres: [String]
+				//数据库内数据的抽象结构 名字: 类型
+				var movieSchema = new Schema({
+				Title: String,
+				Year: Number,
+				Genres: [String]
 			})
 			```
-			- Model:
+			- Model:由 ```Schema``` 发布生成的模型，具有抽象属性和行为的数据库操作对
 			```
 			var Movie = mongooes.model(‘Movie’,movieSchema, ‘movies’)
+			//model的参数分别为：model(modelName, schema, collectionName)
 			```
 			- Document
 			```
@@ -604,12 +607,11 @@ var person = {
 				```
 				Movie.find({}, function(err,movies){
 					if (err){
-							console.log("Query error!")
-							}else{
-								console.log(movies)
-							}
-						}
-					)
+						console.log("Query error!")
+					}else{
+						console.log(movies)
+					}
+				});
 				```
 			- Query Instance – No Callback Passed
 				- An instance of the query is returned which provides a special query builder interface
@@ -623,20 +625,53 @@ var person = {
 						console.log("Movies in year 1996:")
 						console.log(movies)
 					}
+				});
+				```
+			- 嵌套搜索
+				- 数据库：
+				```
+				{_id:12345,
+				name: “Joe Smith”, 
+				email: [“joe@gmail.com”, “joe@ibm.com”], 
+				age: 30, 
+				address: {number: 1, name: “pine street”, suburb: “chippendale”, zip: 2008 }
+				},
+				{_id:54321,
+				name: “Mary Sharp”, 
+				email: “mary@gmail.com”,
+				age: 27,
+				address: { number: 1, name: “cleveland street”,suburb: “chippendale”,zip: 2008 }
 				}
-				)
+				```
+				- 查询：
+				```
+				db.user.find({address: {$elemMatch: {name: “pine street”, suburb: “chippendale”}})
 				```
 	- Insert documents
-		```
-		var newMovie = new Movie(
-		{
-			MovieID: 292,
-			Title: "Outbreak",
-			Year: 1995,
-			Genres: ['Action','Drama','Sci-Fi','Thriller']}
-		)
-		newMovie.save()
-		```
+	```
+	var newMovie = new Movie(
+	{
+		MovieID: 292,
+		Title: "Outbreak",
+		Year: 1995,
+		Genres: ['Action','Drama','Sci-Fi','Thriller']}
+	)
+	newMovie.save()
+	```
+	```
+	db.user.insert({
+		name: "sue",
+		age: 26,
+		status: "A",
+		group: ["news", "sports"]
+	});
+	```
+	- update
+	```
+	db.user.update(
+		{}
+	);
+	```
 	- Static methods
 		- Static methods are the queries defined on Model (collection).
 		- Any standard query/aggregation can be implemented as static method.
