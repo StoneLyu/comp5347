@@ -1,3 +1,26 @@
+# 可能会考：
+## controller: handle error:
+- code:
+```
+Revision.someMethod(para, function(err, result){
+	if (err){
+	
+	}else{
+	
+	}
+})
+```
+## model: aggregate 怎么写
+- code:
+```
+revisionSchema.statics.someMethod = function(para, callback){
+	return this.aggregate{[
+		{$match: {:}}
+	]};
+}
+```
+
+---
 # 知识点总结
 ---
 ## week 1 how web works
@@ -669,9 +692,24 @@ var person = {
 	- update
 	```
 	db.user.update(
-		{}
+		{age: {$gt: 18}},		//选择添加
+		{$set: {Statue: "A"}},	//update操作
+		{multi: true}			//选项
 	);
 	```
+	```
+	db.user.update(
+		{age: {$gt: 18}},
+		{$unset: {email: 1}}	//remove field
+	);
+	```
+	- delete；
+		- remove all documents in user collection
+		```db.user.remove();```
+		- remove document with a particular id:
+		```db.user.remove({_id:12345});```
+	- aggregation: (grouping, summing up value, counting, sorting)
+	
 	- Static methods
 		- Static methods are the queries defined on Model (collection).
 		- Any standard query/aggregation can be implemented as static method.
@@ -704,8 +742,7 @@ var person = {
 				MovieID: 292,
 				Title: "Outbreak",
 				Year: 1995,
-				Genres: ['Action','Drama','Sci-Fi','Thriller']}
-			)
+				Genres: ['Action','Drama','Sci-Fi','Thriller']});
 			newMovie.findSimilarYear(function(err,movies){
 			if (err){
 				console.log("Query error!")
@@ -713,16 +750,11 @@ var person = {
 				console.log("The movies released in the same year as " +
 				newMovie.Title + " are:")
 				console.log(movies)
-			}
-			}
-			)
+			}});
 			```
 		- Instance method vs. static method
 			- static method: the method is attached to Model object
 			- instance method: the method is attached to document object.
----
-
-### express.js
 
 ---
 ## week9 Client side libraries
