@@ -829,6 +829,7 @@ var person = {
 		- 无状态
 		- 类似目录的结构
 	-看Url就知道要什么;看http method就知道干什么;看http status code就知道结果如何
+	
 ---
 ## week11 Security
 ### General security concerns
