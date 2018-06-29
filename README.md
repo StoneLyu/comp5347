@@ -14,9 +14,16 @@ Revision.someMethod(para, function(err, result){
 - code:
 ```
 revisionSchema.statics.someMethod = function(para, callback){
-	return this.aggregate{[
-		{$match: {:}}
-	]};
+	return this.aggregate([
+		{$match: {course: 5347, score: {$lte: 90, $gt: 70}}},
+		{$group: {_id: "$sid", total: {$sum: 1}}},
+		{$project: {
+			_id: 0,
+			score: "$score",
+			number: "$total"
+			}},
+		{$sort: {"score": 1}}
+	]).exec(callback)
 }
 ```
 
