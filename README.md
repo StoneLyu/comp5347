@@ -13,18 +13,16 @@ Revision.someMethod(para, function(err, result){
 ## model: aggregate 怎么写
 - code:
 ```
-revisionSchema.statics.someMethod = function(para, callback){
-	return this.aggregate([
-		{$match: {course: 5347, score: {$lte: 90, $gt: 70}}},
-		{$group: {_id: "$sid", total: {$sum: 1}}},
+db.grade.aggregate([
+		{$match: {course: "5347", score:{$gt:70}}},
+		{$group: {_id: {sid: "$sid", sco: "$score"}, total: {$sum: 1}}},
 		{$project: {
-			_id: 0,
-			score: "$score",
+		  	_id: "$_id.sid",
+			score: "$_id.sco",
 			number: "$total"
 			}},
-		{$sort: {"score": 1}}
-	]).exec(callback)
-}
+		{$sort: {"number": -1}}
+	])
 ```
 ## 中间件
 
