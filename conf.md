@@ -105,6 +105,7 @@ LoadModule speling_module modules/mod_speling.so
 LoadModule userdir_module modules/mod_userdir.so
 LoadModule alias_module modules/mod_alias.so
 LoadModule rewrite_module modules/mod_rewrite.so
+LoadModule php5_module        modules/libphp5.so
 
 <IfModule !mpm_netware_module>
 <IfModule !mpm_winnt_module>
@@ -368,6 +369,8 @@ DefaultType text/plain
     # probably should define those extensions to indicate media types:
     #
     AddType application/x-compress .Z
+    AddType application/x-httpd-php .php .phtml
+    AddType appication/x-httpd-php-source .phps
     AddType application/x-gzip .gz .tgz
 
     #
